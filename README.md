@@ -1,11 +1,39 @@
 # DRIFT-SENSE — complete synthetic benchmark and hybrid localization
 
+DRIFT-SENSE is a hybrid computer-vision system for recovering the location of a high-magnification semiconductor reference region inside a larger lower-magnification search image and estimating the resulting navigation/localization error.
+
 This project is a runnable hackathon prototype for:
 
 **Problem Statement 2: AI-powered navigation-error recovery for wafer inspection tools.**
 
+Wafer inspection tools can experience navigation errors in which the inspection system is positioned at an incorrect physical location.
+
+Given:
+a high-magnification reference image representing a small physical region, and
+a larger lower-magnification search image,
+the objective is to automatically determine where the reference region occurs inside the search image and estimate the localization/navigation error.
+
+Ground-truth coordinates are used only for synthetic-data generation and evaluation. They are not supplied to the inference engine.
+
 It intentionally avoids OpenCV (`cv2`). The implementation uses NumPy, SciPy,
 scikit-image and Matplotlib.
+
+## Key Features
+DRAM-style and FinFET-style synthetic semiconductor structures
+Approximately 1000×1000 search scenes
+Reference/search scale relationship around 10×
+Randomized target placement
+Independent reference and search noise
+SEM-like edge brightening
+Blur, illumination and contrast variation
+Rotation and scaling variation
+Structural imperfections
+Difficult highly-periodic/ambiguous cases
+Coarse-to-fine localization
+Sub-pixel refinement
+Quantitative self-evaluation
+Visualization of ground truth vs prediction
+No OpenCV / cv2 dependency
 
 ## Pipeline
 
@@ -140,3 +168,8 @@ No ground-truth coordinate is used by inference.
 - `visualize.py` — diagnostic figures.
 - `cli.py` — command line interface.
 - `localize_api.py` — hidden-test-friendly inference API.
+
+## Failure and Ambiguity Handling
+Highly periodic semiconductor layouts can contain multiple visually similar locations.
+DRIFT-SENSE retains these difficult cases during evaluation rather than hiding them. Confidence and uncertainty information can be used to distinguish high-confidence localization from potentially ambiguous matches.
+This is important for practical deployment because a visually similar periodic match should not automatically be treated as a certain physical localization.
